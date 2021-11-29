@@ -7,3 +7,4 @@
 # 流程图
 	##snakemake -s ~/idseq_wkf/runs/mNGS.snakemake.py  --dag --cores 1 | dot -Tpdf > test.pdf
 # idseq_wkf
+test,xibaohang pull 2021.11.29.15.54.00
