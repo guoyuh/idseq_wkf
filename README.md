@@ -1,4 +1,4 @@
-# idseq_dag
+# idseq_wkf
 
 # install
 
