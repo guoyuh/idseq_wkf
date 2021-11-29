@@ -1,0 +1,11 @@
+
+RAWDATA_DIR:
+    /mnt/data/NGSDATA/meta_data/test
+
+
+OUTDIR:
+    /mnt/home/huanggy/project/20211126_test_2
+
+
+sample_se_list:
+    /mnt/home/huanggy/idseq_dag/report/samples_test.txt

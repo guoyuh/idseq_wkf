@@ -1,0 +1,6 @@
+
+OUTDIR:
+    /mnt/home/huanggy/project/20211125_test_2
+sample_se:
+    LX2110929: /mnt/data/NGSDATA/meta_data/S200023932_L01_97.fq.gz
+    LX2110776: /mnt/data/NGSDATA/meta_data/S200024082_L01_34.fq.gz

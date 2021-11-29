@@ -1,0 +1,9 @@
+Rawdata_dir:
+    "/mnt/data/NGSDATA/meta_data/test"
+OUTDIR:
+    "/mnt/home/huanggy/project/20211123_test"
+
+sample_se:
+    lx001:["S200026380_L01_90.fq.gz"]
+    lx002:["S200023932_L01_97.fq.gz"]
+  

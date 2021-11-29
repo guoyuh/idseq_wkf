@@ -1,0 +1,21 @@
+
+OUTDIR:
+    /mnt/home/huanggy/project/20211123_test
+sample_se:
+    LX2110582: /mnt/data/NGSDATA/meta_data/S200026380_L01_90.fq.gz
+    LX2110929: /mnt/data/NGSDATA/meta_data/S200023932_L01_97.fq.gz
+    LX2110616: /mnt/data/NGSDATA/meta_data/S200026319_L01_89.fq.gz
+    LX2110775: /mnt/data/NGSDATA/meta_data/S200024082_L01_35.fq.gz
+    LX2110776: /mnt/data/NGSDATA/meta_data/S200024082_L01_34.fq.gz
+    LX2110768: /mnt/data/NGSDATA/meta_data/S200024082_L01_33.fq.gz
+    LX2110904: /mnt/data/NGSDATA/meta_data/S200023932_L01_94.fq.gz
+    LX2110929: /mnt/data/NGSDATA/meta_data/S200023932_L01_97.fq.gz
+    LX2110919: /mnt/data/NGSDATA/meta_data/S200023932_L01_98.fq.gz
+    LX2110938: /mnt/data/NGSDATA/meta_data/S200023823_L01_126.fq.gz
+    LX2110946: /mnt/data/NGSDATA/meta_data/S200023823_L01_125.fq.gz
+    LX2110944: /mnt/data/NGSDATA/meta_data/S200023823_L01_127.fq.gz
+    LX2110951: /mnt/data/NGSDATA/meta_data/S200023771_L01_32.fq.gz
+    LX2110966: /mnt/data/NGSDATA/meta_data/S200023771_L01_102.fq.gz
+    LX2110965: /mnt/data/NGSDATA/meta_data/S200023771_L01_101.fq.gz
+    LX2110967: /mnt/data/NGSDATA/meta_data/S200023771_L01_127.fq.gz
+

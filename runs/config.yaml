@@ -1,0 +1,12 @@
+
+OUTDIR:
+    /mnt/home/huanggy/project/20211129_mNGS
+sample_se:
+    LX001_L01: /mnt/data/NGSDATA/20211127_mNGS/merge/LX001_L01.fq.gz
+    LX002_L01: /mnt/data/NGSDATA/20211127_mNGS/merge/LX002_L01.fq.gz
+    LX003_L01: /mnt/data/NGSDATA/20211127_mNGS/merge/LX003_L01.fq.gz
+    LX004_L01: /mnt/data/NGSDATA/20211127_mNGS/merge/LX004_L01.fq.gz
+    LX005_L01: /mnt/data/NGSDATA/20211127_mNGS/merge/LX005_L01.fq.gz
+    LX006_L01: /mnt/data/NGSDATA/20211127_mNGS/merge/LX006_L01.fq.gz
+    LX007_L01: /mnt/data/NGSDATA/20211127_mNGS/merge/LX007_L01.fq.gz
+    LX008_L01: /mnt/data/NGSDATA/20211127_mNGS/merge/LX008_L01.fq.gz
