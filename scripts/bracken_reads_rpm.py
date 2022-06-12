@@ -24,13 +24,13 @@ def float2(rpm):
     return  a
 
 
-def run(workdir,prefix):
-    clean_fastq = f'{workdir}/result/{prefix}/filter/{prefix}.f.fastq'
+def run(workdir,prefix,cleanfq):
+    #clean_fastq = f'{workdir}/result/{prefix}/filter/{prefix}.filter.fq'
     kraken_out =  f'{workdir}/result/{prefix}/kraken2/{prefix}.s.bracken'
     if os.path.exists(kraken_out):
         out = kraken_out + ".csv"
         tb = pd.read_table(kraken_out,sep = "\t")
-        in_count = count_clena_reads(clean_fastq)
+        in_count = count_clena_reads(cleanfq)
         print(in_count)
         # def npm(reads_num):
         #     a = "%.2f" % (float(reads_num / in_count * 1.0e6))
@@ -47,7 +47,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-w','--workdir',type=str,help='')
     parser.add_argument('-p','--prefix',type = str ,help='')
+    parser.add_argument('-c', '--cleanfq', type=str, help='')
     args = parser.parse_args()
-    run(workdir=args.workdir,prefix=args.prefix)
+    run(workdir=args.workdir,prefix=args.prefix,cleanfq=args.cleanfq)
 
 

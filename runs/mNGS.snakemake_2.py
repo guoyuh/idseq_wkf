@@ -94,7 +94,7 @@ rule kneaddata:
         --bowtie2 {bowtie2_path} --bowtie2-options '--very-sensitive --dovetail' -db {host_yanhaung} \
         --output-prefix {wildcards.sample}"
 ##### ????????????????????shell 中用sample 这个变量 必须要用wildcards.sample ,单独用{sample} 报错如下：
-# RuleException in line 27 of /mnt/home/huanggy/idseq_dag/report/mNGS.snakemake.py:
+# RuleException in line 27 of /mnt/home/huanggy/idseq_wkf/report/mNGS.snakemake.py:
 # NameError: The name 'sample' is unknown in this context. Did you mean 'wildcards.sample'?
 
 
@@ -175,7 +175,7 @@ rule  bracken_format_rpm:
         "{outdir}/result/{sample}/kraken2/{sample}.s.bracken.csv"
     shell:
         #NameError: The name 'outdir' is unknown in this context. Did you mean 'wildcards.outdir'?
-        "python  ~/idseq_dag/scripts/bracken_reads_rpm_2.py -c {input[1]} -b {input[0]} "
+        "python  ~/idseq_wkf/scripts/bracken_reads_rpm_2.py -c {input[1]} -b {input[0]} "
 
 # rule  kreport2mpa:
 #     input:
@@ -183,7 +183,7 @@ rule  bracken_format_rpm:
 #     output:
 #         "{outdir}/result/{sample}/kraken2/{sample}.report.mpa.txt"
 #     shell:
-#         "python ~/idseq_dag/KrakenTools/kreport2mpa.py --no-intermediate-ranks --read_count  -r {input} -o {output}"
+#         "python ~/idseq_wkf/KrakenTools/kreport2mpa.py --no-intermediate-ranks --read_count  -r {input} -o {output}"
 
 
 rule  kreport2mpa:
@@ -194,7 +194,7 @@ rule  kreport2mpa:
         "{outdir}/result/{sample}/kraken2/{sample}.report.mpa.txt",
         "{outdir}/result/{sample}/kraken2/{sample}.report.mpa.rpm.csv"
     shell:
-        "python ~/idseq_dag/KrakenTools/kreport2mpa.py --no-intermediate-ranks --read_count  -r {input[0]} -o {output[0]} && python  ~/idseq_dag/scripts/kraken_reads_rpm.py {input[1]} {output[0]} "
+        "python ~/idseq_wkf/KrakenTools/kreport2mpa.py --no-intermediate-ranks --read_count  -r {input[0]} -o {output[0]} && python  ~/idseq_wkf/scripts/kraken_reads_rpm.py {input[1]} {output[0]} "
 
 rule  kreport2krona:
     input:
@@ -203,8 +203,8 @@ rule  kreport2krona:
         "{outdir}/result/{sample}/kraken2/{sample}.krona",
         "{outdir}/result/{sample}/kraken2/{sample}.krona.html"
     shell:
-        "python  ~/idseq_dag/KrakenTools/kreport2krona.py --report-file  {input} -o {output[0]} \
-        && perl ~/idseq_dag/Krona/bin/ktImportText {output[0]}  -o {output[1]}"
+        "python  ~/idseq_wkf/KrakenTools/kreport2krona.py --report-file  {input} -o {output[0]} \
+        && perl ~/idseq_wkf/Krona/bin/ktImportText {output[0]}  -o {output[1]}"
 
 
 # rule clean_reads_bowtie2_bac_fungi_protozoa_viral:
@@ -281,7 +281,7 @@ rule Covem_format:
     output:
         "{outdir}/result/{sample}/align/{sample}.refseq.cove.tsv"
     shell:
-        "python ~/idseq_dag/scripts/coverm_format.py {input} /mnt/data/NCBI_Refseq/my_assembly_summary_refseq.info20211101.txt /mnt/data/NCBI_Refseq/viral/kraken2_viral_refseq_info "
+        "python ~/idseq_wkf/scripts/coverm_format.py {input} /mnt/data/NCBI_Refseq/my_assembly_summary_refseq.info20211101.txt /mnt/data/NCBI_Refseq/viral/kraken2_viral_refseq_info "
 
 
 

@@ -2,9 +2,6 @@
 # -*- coding: utf-8 -*
 # @Author  : yellow_huang
 
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*
-# @Author  : yellow_huang
 
 import pandas as pd
 import pymysql

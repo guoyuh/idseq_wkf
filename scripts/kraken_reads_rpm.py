@@ -96,7 +96,7 @@ def run(fastq,mpa_report):
             if viruses_re:
                 viruses_amount = int(viruses_re.group(1))
                 print('viruses_amount', viruses_amount)
-            viruses_re2 = re.match('k__Viruses\|.*?\|([kpcofgs])__(\w+)\t(\d+)\n', line)
+            viruses_re2 = re.match('k__Viruses\|.*?\|([kpcofgs])__(\w+)\t(\d+)', line)
             if viruses_re2:
                 out.write('viruses,{0},{1},{2},{3},{4},{5:.2%},{6:.2f}\n'.format(viruses_amount,
                                                                                  viruses_re2.group(1),

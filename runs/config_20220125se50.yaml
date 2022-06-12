@@ -1,0 +1,6 @@
+
+OUTDIR:
+    /mnt/home/huanggy/project/20220125
+sample_se:
+    S200023771_L01: /mnt/data/NGSDATA/meta_data/S200023771_L01_32.fq.gz
+    S200024082_L01: /mnt/data/NGSDATA/meta_data/S200024082_L01_34.fq.gz

@@ -1,6 +1,6 @@
 
 OUTDIR:
-    /mnt/home/huanggy/project/20211129_mNGS
+    /mnt/home/huanggy/project/20220217
 sample_se:
     LX001_L01: /mnt/data/NGSDATA/20211127_mNGS/merge/LX001_L01.fq.gz
     LX002_L01: /mnt/data/NGSDATA/20211127_mNGS/merge/LX002_L01.fq.gz

@@ -40,13 +40,13 @@ rule all:
     ####想要哪一步的结果,都在这里买定义
     input:
         #expand("{outdir}/result/{sample}/",outdir=OUTDIR,sample=SAMPLE),
-        #expand("{outdir}/result/{sample}/filter/{sample}.fastq",outdir=OUTDIR,sample=config["sample_se"]),
+        #expand("{outdir}/result/{sample}/filter/{sample}.log",outdir=OUTDIR,sample=config["sample_se"]),
         expand("{outdir}/result/{sample}/filter/{sample}.f.fastq",outdir=OUTDIR,sample=config["sample_se"]),
         expand("{outdir}/result/{sample}/kraken2/{sample}.report",outdir=OUTDIR,sample=config["sample_se"]),
         expand("{outdir}/result/{sample}/kraken2/{sample}.s.bracken",outdir=OUTDIR,sample=config["sample_se"]),
         expand("{outdir}/result/{sample}/kraken2/{sample}.s.bracken.csv",outdir=OUTDIR,sample=config["sample_se"]),
         expand("{outdir}/result/{sample}/kraken2/{sample}.report.mpa.txt",outdir=OUTDIR,sample=config["sample_se"]),
-        expand("{outdir}/result/{sample}/kraken2/{sample}.report.mpa.rpm.csv",outdir=OUTDIR,sample=config["sample_se"]),
+        expand("{outdir}/result/{sample}/kraken2/{sample}.report.mpa.rpm.xls",outdir=OUTDIR,sample=config["sample_se"]),
         expand("{outdir}/result/{sample}/kraken2/{sample}.krona",outdir=OUTDIR,sample=config["sample_se"]),
         #expand("{outdir}/result/{sample}/align/{sample}.bowtie2.refseq.log",outdir=OUTDIR,sample=config["sample_se"])
         expand("{outdir}/result/{sample}/align/{sample}.refseq.sam",outdir=OUTDIR,sample=config["sample_se"]),
@@ -57,8 +57,9 @@ rule all:
         #directory(expand("{outdir}/result/{sample}/filter/spades_out",outdir=OUTDIR,sample=config["sample_se"])),
         expand("{outdir}/result/{sample}/filter/spades_out/contigs.fasta",outdir=OUTDIR,sample=config["sample_se"]),
         expand("{outdir}/result/{sample}/filter/spades_out/{sample}.amr",outdir=OUTDIR,sample=config["sample_se"]),
-        expand("{outdir}/result/stats/{sample}.log",outdir=OUTDIR,sample=config["sample_se"]),
-        expand("{outdir}/result/stats/kneaddata.stats",outdir=OUTDIR,sample=config["sample_se"])
+        #expand("{outdir}/result/stats/{sample}.log",outdir=OUTDIR,sample=config["sample_se"]),
+        expand("{outdir}/result/{sample}/filter/kneaddata.sum.txt",outdir=OUTDIR,sample=config["sample_se"])
+        #expand("{outdir}/result/stat.xls",outdir=OUTDIR)
 
         
         
@@ -91,10 +92,10 @@ rule kneaddata:
         -v -t {params.thread_num} --remove-intermediate-output \
         --trimmomatic /mnt/home/huanggy/miniconda3/envs/snakemake_py36/share/trimmomatic-0.39-2 \
         --trimmomatic-options 'SLIDINGWINDOW:4:20 MINLEN:40 ILLUMINACLIP:/mnt/home/huanggy/miniconda3/envs/snakemake_py36/share/trimmomatic-0.39-2/adapters/TruSeq3-PE-2.fa:2:30:10' \
-        --bowtie2 {bowtie2_path} --bowtie2-options '--very-sensitive --dovetail' -db {host_yanhaung} \
+        --bowtie2 {bowtie2_path} --bowtie2-options '--very-sensitive --dovetail' -db {host_hg37} \
         --output-prefix {wildcards.sample}"
 ##### ????????????????????shell 中用sample 这个变量 必须要用wildcards.sample ,单独用{sample} 报错如下：
-# RuleException in line 27 of /mnt/home/huanggy/idseq_dag/report/mNGS.snakemake.py:
+# RuleException in line 27 of /mnt/home/huanggy/idseq_wkf/report/mNGS.snakemake.py:
 # NameError: The name 'sample' is unknown in this context. Did you mean 'wildcards.sample'?
 
 
@@ -124,13 +125,15 @@ rule PriceSeqFilter:
 
 rule kneaddata_stat:
     input:
-        #expand("{outdir}/result/{sample}/filter",outdir=OUTDIR,sample=SAMPLE)
-        "{outdir}/result/{sample}/filter"
+        "{outdir}/result/{sample}/filter/{sample}.log"
         #The flag 'directory' used in rule kneaddata_stat is only valid for outputs, not inputs.
     output:
         kneaddata_sum = "{outdir}/result/{sample}/filter/kneaddata.sum.txt"
+    params:
+        indir = "{outdir}/result/{sample}/filter",
+        outdir=config["OUTDIR"]
     shell:
-        "{kneaddata_read_count_table} --input {input} --output {output.kneaddata_sum}"
+        "{kneaddata_read_count_table} --input {params.indir} --output {output.kneaddata_sum}  && rm -f {params.outdir}/result/{wildcards.sample}/filter/{wildcards.sample}_hg37dec_v0.1_bowtie2_contam.fastq"
 
 
 rule kraken2_classify:
@@ -174,7 +177,7 @@ rule  bracken_format_rpm:
         "{outdir}/result/{sample}/kraken2/{sample}.s.bracken.csv"
     shell:
         #NameError: The name 'outdir' is unknown in this context. Did you mean 'wildcards.outdir'?
-        "python  ~/idseq_dag/scripts/bracken_reads_rpm.py -w {wildcards.outdir}  -p {wildcards.sample} "
+        "python  ~/idseq_wkf/scripts/bracken_reads_rpm.py -w {wildcards.outdir}  -p {wildcards.sample} "
 
 # rule  kreport2mpa:
 #     input:
@@ -182,18 +185,19 @@ rule  bracken_format_rpm:
 #     output:
 #         "{outdir}/result/{sample}/kraken2/{sample}.report.mpa.txt"
 #     shell:
-#         "python ~/idseq_dag/KrakenTools/kreport2mpa.py --no-intermediate-ranks --read_count  -r {input} -o {output}"
+#         "python ~/idseq_wkf/KrakenTools/kreport2mpa.py --no-intermediate-ranks --read_count  -r {input} -o {output}"
 
 
 rule  kreport2mpa:
     input:
         "{outdir}/result/{sample}/kraken2/{sample}.report",
-        "{outdir}/result/{sample}/filter/{sample}.f.fastq"
+        #"{outdir}/result/{sample}/filter/{sample}.f.fastq"
+        "{outdir}/result/{sample}/filter/kneaddata.sum.txt"
     output:
         "{outdir}/result/{sample}/kraken2/{sample}.report.mpa.txt",
-        "{outdir}/result/{sample}/kraken2/{sample}.report.mpa.rpm.csv"
+        "{outdir}/result/{sample}/kraken2/{sample}.report.mpa.rpm.xls"
     shell:
-        "python ~/idseq_dag/KrakenTools/kreport2mpa.py --no-intermediate-ranks --read_count  -r {input[0]} -o {output[0]} && python  ~/idseq_dag/scripts/kraken_reads_rpm.py {input[1]} {output[0]} "
+        "python ~/idseq_wkf/KrakenTools/kreport2mpa.py --no-intermediate-ranks --read_count  -r {input[0]} -o {output[0]} && python  ~/idseq_wkf/scripts/kraken_reads_rpm_2.py {input[1]} {output[0]} "
 
 rule  kreport2krona:
     input:
@@ -202,8 +206,8 @@ rule  kreport2krona:
         "{outdir}/result/{sample}/kraken2/{sample}.krona",
         "{outdir}/result/{sample}/kraken2/{sample}.krona.html"
     shell:
-        "python  ~/idseq_dag/KrakenTools/kreport2krona.py --report-file  {input} -o {output[0]} \
-        && perl ~/idseq_dag/Krona/bin/ktImportText {output[0]}  -o {output[1]}"
+        "python  ~/idseq_wkf/KrakenTools/kreport2krona.py --report-file  {input} -o {output[0]} \
+        && perl ~/idseq_wkf/Krona/bin/ktImportText {output[0]}  -o {output[1]}"
 
 
 # rule clean_reads_bowtie2_bac_fungi_protozoa_viral:
@@ -224,7 +228,8 @@ rule  kreport2krona:
 
 rule clean_reads_bowtie2_bac_fungi_protozoa_viral:
     input:
-        "{outdir}/result/{sample}/filter/{sample}.f.fastq"
+        "{outdir}/result/{sample}/filter/{sample}.f.fastq",
+        "{outdir}/result/{sample}/kraken2/{sample}.krona.html"  ##with --latency-wait
     output:
         "{outdir}/result/{sample}/align/{sample}.clean.refseq.fq.gz",
         "{outdir}/result/{sample}/align/{sample}.refseq.sam"
@@ -234,7 +239,7 @@ rule clean_reads_bowtie2_bac_fungi_protozoa_viral:
     log:
         log_file="{outdir}/result/{sample}/align/{sample}.bowtie2.refseq.log"
     shell:
-        "{bowtie2_bin} -q --quiet --sensitive --threads {params.threads} -x {params.bac_fungi_protozoa_viral_index} -U {input} --al-gz {output[0]} -S {output[1]} 1>{log.log_file} 2>&1"
+        "{bowtie2_bin} -q --quiet --sensitive --threads {params.threads} -x {params.bac_fungi_protozoa_viral_index} -U {input[0]} --al-gz {output[0]} -S {output[1]} 1>{log.log_file} 2>&1"
 
 rule sam2bam:
     input:
@@ -280,13 +285,14 @@ rule Covem_format:
     output:
         "{outdir}/result/{sample}/align/{sample}.refseq.cove.tsv"
     shell:
-        "python ~/idseq_dag/scripts/coverm_format.py {input} /mnt/data/NCBI_Refseq/my_assembly_summary_refseq.info20211101.txt /mnt/data/NCBI_Refseq/viral/kraken2_viral_refseq_info "
+        "python ~/idseq_wkf/scripts/coverm_format.py {input} /mnt/data/NCBI_Refseq/my_assembly_summary_refseq.info20211101.txt /mnt/data/NCBI_Refseq/viral/kraken2_viral_refseq_info "
 
 
 
 rule SPAdes:
     input:
-        "{outdir}/result/{sample}/filter/{sample}.f.fastq"
+        "{outdir}/result/{sample}/filter/{sample}.f.fastq",
+        "{outdir}/result/{sample}/align/{sample}.refseq.cove.tsv" ###with --latency-wait
     output:
         #directory("{outdir}/result/{sample}/filter/spades_out"),
         # ChildIOException:
@@ -303,7 +309,7 @@ rule SPAdes:
     shell:
         #SPAdes
         # if --meta  giveme error Sorry, current version of metaSPAdes can work either with single library (paired-end only) or in hybrid paired-end + (TSLR or PacBio or Nanopore) mode.
-        "/mnt/project/tools/SPAdes-3.15.3/bin/spades.py -s {input} -o {params.out_dir}"
+        "/mnt/project/tools/SPAdes-3.15.3/bin/spades.py -s {input[0]} -o {params.out_dir}"
 
 
 
@@ -317,23 +323,47 @@ rule amrfinder:
         "amrfinder -n {input} -o {output}"
 
 
-rule kneaddata_log_link:
-    input:
-        "{outdir}/result/{sample}/filter/{sample}.log"
+# rule kneaddata_log_link:
+#     input:
+#         "{outdir}/result/{sample}/filter/{sample}.log"
 
-    output:
-        "{outdir}/result/stats/{sample}.log"
+#     output:
+#         "{outdir}/result/stats/{sample}.log"
 
-    shell:
-        "ln -s {input} {output}"
+#     shell:
+#         "ln -s {input} {output}"
 
-rule stats:
-    input:
-        expand("{outdir}/result/stats/{sample}.log",outdir=config["OUTDIR"],sample=config["sample_se"])
-    output:
-        "{outdir}/result/stats/kneaddata.stats"
+# rule stats:
+#     input:
+#         expand("{outdir}/result/stats/{sample}.log",outdir=config["OUTDIR"],sample=config["sample_se"])
+#     output:
+#         "{outdir}/result/stats/kneaddata.stats"
 
-    params:
-        input_dir = directory("{outdir}/result/stats")
-    shell:
-        "kneaddata_read_count_table --input {params.input_dir} --output {output}"
+#     params:
+#         input_dir = directory("{outdir}/result/stats")
+#     shell:
+#         "kneaddata_read_count_table --input {params.input_dir} --output {output} && rm -f {outdir}/result/{wildcards.sample}/filter/{wildcards.sample}_L01_yh_add_hg19_GRCh38_latest_rna_bowtie2_contam.fastq "
+
+
+
+########################################################################################################
+# rule merge_stats:
+#     input:
+#         #"{outdir}/result/{sample}/filter/{sample}.log"
+#         # $ sh ~/idseq_wkf/launch.sh ~/project/20211208_mNGS ~/idseq_wkf/runs/config_20211203.yaml 8
+#         # Creating specified working directory /mnt/home/huanggy/project/20211208_mNGS.
+#         # Building DAG of jobs...
+#         # WildcardError in line 540 of /mnt/home/huanggy/idseq_wkf/runs/mNGS.snakemake.py:
+#         # Wildcards in input files cannot be determined from output files:
+#         # 'sample'
+#         #########expand("{outdir}/result/{sample}/filter/{sample}.log",outdir=OUTDIR,sample=config["sample_se"])
+#         expand("{outdir}/result/{sample}/filter/kneaddata.sum.txt",outdir=OUTDIR,sample=config["sample_se"])
+#     output:
+#         "{outdir}/result/stat.xls"
+#     params:
+#         outdir=config["OUTDIR"]
+#     shell:
+#         #"python ~/idseq_wkf/scripts/kneaddata_merge.py /mnt/home/huanggy/project/20211129_mNGS"
+#         #RuleException in line 547 of /mnt/home/huanggy/idseq_wkf/runs/mNGS.snakemake.py:
+#         #NameError: The name 'outdir' is unknown in this context. Did you mean 'wildcards.outdir'?
+#         "python ~/idseq_wkf/scripts/kneaddata_merge.py {params.outdir} "

@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 
 header = ["assembly_accession","bioproject","biosample","wgs_master","refseq_category","taxid","species_taxid","organism_name","infraspecific_name","isolate","version_status","assembly_level","release_type","genome_rep","seq_rel_date","asm_name","submitter","gbrs_paired_asm","paired_asm_comp","ftp_path","excluded_from_refseq","relation_to_type_material","asm_not_live_date"]
-assemble_summary = "/mnt/data/NCBI_Refseq/my_assembly_summary_refseq.info20211101.txt"
+assemble_summary = "/mnt/data/NCBI_Refseq/my_assembly_summary_refseq.info20220406.txt"
 def assembleFile2strain(assemble_summary):
     assemble_genome2organism_name = {}
     with open(assemble_summary) as fh:
@@ -18,6 +18,8 @@ def assembleFile2strain(assemble_summary):
                 break
             else:
                 organism_name = line.strip().split("\t")[7]
+                #ftp_path=assembly_accession + asm_name
+                #ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/003/205/575/GCF_003205575.1_ASM320557v1
                 ftp_path = line.strip().split('\t')[19].split('/')[-1] + "_genomic"
                 #print(organism_name + "------>" + ftp_path)
                 if ftp_path not in organism_name:
@@ -66,8 +68,8 @@ def run(coverm_file,assemble_summary):
 def run2(coverm_file,assemble_summary,kraken2_viral_refseq_info):
     my_refseq_Read_Count_cut_off = 1
     assemble_genome2organism_name = assembleFile2strain_update_viral(assemble_summary,kraken2_viral_refseq_info)
-    header = ['Genome', 'Covered Fraction', 'Variance', 'Length', 'my_refseq_Read_Count', 'RPKM']
-    out = os.path.dirname(coverm_file) + '/' + os.path.basename(coverm_file).strip(".cove.tsv") + '.refseq.cove.tsv'
+    header = ['Genome', 'mean depth','Covered Bases','Covered Fraction', 'Variance', 'Length', 'my_refseq_Read_Count', 'RPKM']
+    out = os.path.dirname(coverm_file) + '/' + os.path.basename(coverm_file).strip(".cove.tsv") + '.refseq.cove.xls'
     myout = open(out,'w')
     print("\t".join(header),sep='\t',file=myout)
     with open(coverm_file,'r') as fh:
@@ -78,7 +80,7 @@ def run2(coverm_file,assemble_summary,kraken2_viral_refseq_info):
                 break
             else:
                 genome = line.strip().split("\t")[0]
-                my_refseq_Read_Count = int(line.strip().split("\t")[4])
+                my_refseq_Read_Count = int(line.strip().split("\t")[6])
                 if my_refseq_Read_Count < my_refseq_Read_Count_cut_off:
                     continue
                 if genome in assemble_genome2organism_name:
