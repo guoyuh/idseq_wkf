@@ -7,3 +7,5 @@
 # 流程图
 	##snakemake -s ~/idseq_wkf/runs/mNGS.snakemake.py  --dag --cores 1 | dot -Tpdf > test.pdf
 # idseq_wkf
+	##you also run by workflow.py like this :
+	python /path/to/idseq_wkf/runs/workflow_3.py /path/to/outdir  sample_prefix  /path/to/single.fq.gz &
